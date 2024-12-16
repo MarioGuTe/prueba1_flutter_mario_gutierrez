@@ -115,7 +115,7 @@ class _StartScreenState extends State<StartScreen> {
             ...imagePaths.map((imagePath) {
               Animal selectedAnimal = animals.firstWhere(
                 (animal) => animal.originalImagePath == imagePath,
-                orElse: () => animals[0], // Provide a fallback animal
+                orElse: () => animals[0],
               );
 
               return Column(
@@ -131,16 +131,42 @@ class _StartScreenState extends State<StartScreen> {
                         ),
                       );
                     },
-                    child: Container(
-                      width: 200,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: AssetImage(imagePath),
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: 200,
+                          height: 200,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: AssetImage(imagePath),
+                            ),
+                          ),
                         ),
-                      ),
+                        Positioned(
+                          top: 10,
+                          left: 10,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.6),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              selectedAnimal.name,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 16),
