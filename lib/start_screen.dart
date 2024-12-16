@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:prueba1_flutter_mario_gutierrez/models/animal.dart';
+import 'package:prueba1_flutter_mario_gutierrez/details_screen.dart';
+import 'package:prueba1_flutter_mario_gutierrez/data/animal_data.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
@@ -12,31 +15,33 @@ class _StartScreenState extends State<StartScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF578383),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 70),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 22,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: const Color(0xFF578383),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 70),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 22,
+                ),
+                child: headerSection(context),
               ),
-              child: headerSection(context),
-            ),
-            const SizedBox(height: 26),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 22,
+              const SizedBox(height: 26),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 22,
+                ),
+                child: SizedBox(
+                  width: size.width,
+                  child: textSection(),
+                ),
               ),
-              child: SizedBox(
-                width: size.width,
-                child: textSection(),
-              ),
-            ),
-            const SizedBox(height: 36),
-            bodySection(context),
-          ],
+              const SizedBox(height: 36),
+              bodySection(context),
+            ],
+          ),
         ),
       ),
     );
@@ -99,34 +104,49 @@ class _StartScreenState extends State<StartScreen> {
       child: Container(
         width: MediaQuery.of(context).size.width * 0.7,
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(100, 49, 67, 72),
-          borderRadius: const BorderRadius.only(
-            topRight:
-                Radius.circular(16), // Rounded only on the top-right corner
+        decoration: const BoxDecoration(
+          color: Color.fromARGB(100, 49, 67, 72),
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(16),
           ),
         ),
         child: Column(
           children: [
-            // Loop through the image paths to dynamically create containers
             ...imagePaths.map((imagePath) {
+              Animal selectedAnimal = animals.firstWhere(
+                (animal) => animal.originalImagePath == imagePath,
+                orElse: () => animals[0], // Provide a fallback animal
+              );
+
               return Column(
                 children: [
-                  Container(
-                    width: 200,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage(imagePath),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailsScreen(
+                            animal: selectedAnimal,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: AssetImage(imagePath),
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16), // Space between images
+                  const SizedBox(height: 16),
                 ],
               );
-            }) // Convert iterable to list
+            })
           ],
         ),
       ),
